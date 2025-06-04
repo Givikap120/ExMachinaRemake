@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GadgetSlot.h"
 
 void UGadgetSlot::GetSize(int32& SizeX, int32& SizeY) const

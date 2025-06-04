@@ -1,10 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WeaponSlot.h"
 #include "CustomFunctionLibrary.h"
 
-// Sets default values
 UWeaponSlot::UWeaponSlot()
 {
 }
@@ -33,4 +29,3 @@ void UWeaponSlot::GetSize(int32& SizeX, int32& SizeY) const
 {
 	UWeapon::GetSizeForWeaponType(SlotType, SizeX, SizeY);
 }
-
