@@ -16,7 +16,6 @@ void UWeapon::ApplyStats(const FWeaponStats& Stats)
 	// Stats
 	Damage = Stats.Damage;
 	WeaponType = Stats.WeaponType;
-	DamageType = Stats.DamageType;
 	FiringRate = Stats.FiringRate;
 	FiringRange = Stats.FiringRange * 1000; // convert units
 	ChargeSize = Stats.ChargeSize;

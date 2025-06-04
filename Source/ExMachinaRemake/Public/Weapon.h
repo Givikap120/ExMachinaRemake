@@ -130,9 +130,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		EWeaponType WeaponType;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		EDamageType DamageType;
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (MakeStructureDefaultValue = "0.000000"))
 		double FiringRate;
 
