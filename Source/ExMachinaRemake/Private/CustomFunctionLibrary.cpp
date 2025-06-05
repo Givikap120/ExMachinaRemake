@@ -2,6 +2,8 @@
 
 
 #include "CustomFunctionLibrary.h"
+#include <Misc/Paths.h>
+#include "HAL/FileManager.h"
 
 static float Heuristic(const FVector& A, const FVector& B)
 {
@@ -146,4 +148,12 @@ bool UCustomFunctionLibrary::AStarPathfinding(
 UObject* UCustomFunctionLibrary::CreateObject(TSubclassOf<UObject> Class)
 {
     return NewObject<UObject>((UObject*)GetTransientPackage(), Class.Get());
+}
+
+TArray<FString> UCustomFunctionLibrary::GetSaveFiles()
+{
+    FString RootDirectory = FPaths::ProjectSavedDir() + "SaveGames/";
+    TArray<FString> Result;
+    IFileManager::Get().FindFiles(Result, *RootDirectory, TEXT("*.sav"));
+    return Result;
 }

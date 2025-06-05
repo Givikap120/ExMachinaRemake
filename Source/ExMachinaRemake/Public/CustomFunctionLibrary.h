@@ -55,4 +55,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Creation")
     static UObject* CreateObject(TSubclassOf<UObject> Class);
+
+    UFUNCTION(BlueprintPure, Category = "SaveGame")
+    static TArray<FString> GetSaveFiles();
 };
