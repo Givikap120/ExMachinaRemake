@@ -169,6 +169,7 @@ void UWeapon::LoadWeapon(const FF_SaveGame_Weapon& SaveWeapon)
 	LoadItem(SaveWeapon);
 
 	BaseStats = SaveWeapon.WeaponStats;
+	ApplyStats(BaseStats);
 	CurrentCharge = SaveWeapon.CurrentCharge;
 }
 
