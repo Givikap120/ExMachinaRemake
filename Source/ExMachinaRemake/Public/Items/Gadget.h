@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Item.h"
+#include "Items/Item.h"
 #include "Gadget.generated.h"
 
 UCLASS(Abstract)

@@ -1,4 +1,4 @@
-#include "TradeItem.h"
+#include "Items/TradeItem.h"
 #include "CustomFunctionLibrary.h"
 
 UTradeItem* UTradeItem::CreateTradeItemFromTable(TSubclassOf<UTradeItem> Class, UDataTable* DataTable, FName RowName)

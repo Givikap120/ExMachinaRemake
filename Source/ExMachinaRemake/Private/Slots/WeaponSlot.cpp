@@ -1,4 +1,4 @@
-#include "WeaponSlot.h"
+#include "Slots/WeaponSlot.h"
 #include "CustomFunctionLibrary.h"
 
 UWeaponSlot::UWeaponSlot()

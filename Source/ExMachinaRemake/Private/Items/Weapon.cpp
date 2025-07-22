@@ -1,4 +1,4 @@
-#include "Weapon.h"
+#include "Items/Weapon.h"
 #include <CustomFunctionLibrary.h>
 #include "JsonObjectConverter.h"
 

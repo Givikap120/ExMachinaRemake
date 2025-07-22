@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <Gadget.h>
+#include <Items/Gadget.h>
 #include "GadgetSlot.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGadgetChangedSignature);

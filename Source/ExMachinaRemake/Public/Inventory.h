@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Item.h"
+#include "Items/Item.h"
 #include "Inventory.generated.h"
 
 USTRUCT(BlueprintType)

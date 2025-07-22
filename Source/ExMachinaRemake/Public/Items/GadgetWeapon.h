@@ -1,8 +1,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Gadget.h"
-#include <Weapon.h>
+#include "Items/Gadget.h"
+#include <Items/Weapon.h>
 #include "GadgetWeapon.generated.h"
 
 USTRUCT(BlueprintType)

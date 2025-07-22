@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Weapon.h"
+#include "Items/Weapon.h"
 #include "WeaponSlot.generated.h"
 
 /** Stats of the weapon to make a Table */

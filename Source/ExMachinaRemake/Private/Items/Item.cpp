@@ -1,4 +1,4 @@
-#include "Item.h"
+#include "Items/Item.h"
 #include "JsonObjectConverter.h"
 
 void UItem::GetSize(int32& SizeX, int32& SizeY) const

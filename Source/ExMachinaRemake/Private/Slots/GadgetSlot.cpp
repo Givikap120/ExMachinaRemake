@@ -1,4 +1,4 @@
-#include "GadgetSlot.h"
+#include "Slots/GadgetSlot.h"
 
 void UGadgetSlot::GetSize(int32& SizeX, int32& SizeY) const
 {
