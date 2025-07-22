@@ -1,7 +1,6 @@
 #include "Components/WeaponInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/AudioComponent.h"
-#include "Items/Weapon.h"
 #include "TimerManager.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
@@ -40,9 +39,7 @@ void UWeaponInstance::TryStartShooting()
 
 void UWeaponInstance::StartShooting()
 {
-	if (!bCanStartShooting) return;
-
-	bCanStartShooting = false;
+	if (ShootTimerHandle.IsValid()) return;
 
 	UCustomFunctionLibrary::SetTimer(
 		ShootTimerHandle,
@@ -83,7 +80,6 @@ void UWeaponInstance::TryStopShooting()
 
 void UWeaponInstance::StopShooting()
 {
-	bCanStartShooting = true;
 	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, ShootTimerHandle);
 
 	if (IsWeaponValid() && Weapon->IsAuto)
@@ -147,18 +143,20 @@ FHitResult UWeaponInstance::TraceShot() const
 	UWorld* World = GetWorld();
 	if (!IsValid(World)) return HitResult;
 
-	const FVector Start = SkeletalMeshComponent->GetSocketLocation(TEXT("Gun"));
+	FName BarrelSocket = Weapon->GetTraceBarrel();
 
-	FRotator GunRotation = SkeletalMeshComponent->GetSocketRotation(TEXT("Gun"));
-	GunRotation = FRotator(GunRotation.Roll - 90.0f, GunRotation.Yaw - 90.0f, 0);
+	const FTransform SocketTransform = SkeletalMeshComponent->GetSocketTransform(BarrelSocket);
 
-	const FVector End = Start + GunRotation.Vector() * Weapon->FiringRange;
+	const FVector Start = SocketTransform.GetLocation();
+	const FVector Forward = SocketTransform.GetUnitAxis(EAxis::Z);
+	const FVector End = Start + Forward * Weapon->FiringRange;
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(GetOwner());
 
 	World->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
-	DrawDebugLine(World, Start, End, FColor::Red, false, 1, 0, 1);
+
+	//DrawDebugLine(World, Start, End, FColor::Red, false, 1, 0, 1);
 
 	return HitResult;
 }
@@ -170,7 +168,6 @@ void UWeaponInstance::Shoot()
 
 	ConsumeAmmo();
 
-	// Do hit trace
 	FHitResult Hit = TraceShot();
 
 	FBarrelSockets Barrels = Weapon->GetUseBarrels();
@@ -215,6 +212,7 @@ void UWeaponInstance::InitializeFromWeapon(UWeapon* NewWeapon)
 	if (!IsValid(Weapon))
 	{
 		DeactivateWeapon();
+		SkeletalMeshComponent->SetSkeletalMesh(nullptr);
 		return;
 	}
 
@@ -233,10 +231,51 @@ void UWeaponInstance::InitializeFromWeapon(UWeapon* NewWeapon)
 	OnAmmoChanged.Broadcast(Weapon->CurrentCharge);
 }
 
+void UWeaponInstance::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (!bIsActive) return;
+	if (CurrentYaw == DesiredYaw && DesiredPitch == CurrentPitch) return;
+
+	float DeltaYaw = FMath::Abs(FMath::FindDeltaAngleDegrees(DesiredYaw, CurrentYaw));
+	float DeltaPitch = FMath::Abs(FMath::FindDeltaAngleDegrees(DesiredPitch, CurrentPitch));
+
+	float DeltaTotal = FMath::Sqrt(DeltaYaw * DeltaYaw + DeltaPitch * DeltaPitch);
+	if (DeltaTotal == 0) return; // extra check in case previous equality check failed because 0 != 360
+
+	float MaxDeltaTotal = RotationSpeed * DeltaTime;
+	float PercentageOfMovement = FMath::Clamp(MaxDeltaTotal / DeltaTotal, 0.0f, 1.0f);
+
+	CurrentYaw = FMath::FixedTurn(CurrentYaw, DesiredYaw, DeltaYaw * PercentageOfMovement);
+	CurrentPitch = FMath::FixedTurn(CurrentPitch, DesiredPitch, DeltaPitch * PercentageOfMovement);
+
+	RotateGunMesh(CurrentYaw, CurrentPitch);
+}
+
+void UWeaponInstance::AimTo(const FVector& TargetLocation)
+{
+	if (!bIsActive || !IsWeaponValid() || !IsValid(SkeletalMeshComponent)) return;
+
+	AimTargetLocation = TargetLocation;
+
+	const FName BarrelSocket = Weapon->GetTraceBarrel();
+	const FVector BarrelLocation = SkeletalMeshComponent->GetSocketLocation(BarrelSocket);
+
+	const FVector WorldDirection = (TargetLocation - BarrelLocation).GetSafeNormal();
+
+	const FTransform OwnerTransform = GetOwner()->GetActorTransform();
+	const FVector LocalDirection = OwnerTransform.InverseTransformVectorNoScale(WorldDirection);
+
+	const FRotator LocalAimRotator = LocalDirection.Rotation();
+
+	DesiredYaw = LocalAimRotator.Yaw;
+	DesiredPitch = LocalAimRotator.Pitch;
+}
+
 void UWeaponInstance::ActivateWeapon()
 {
 	bIsActive = true;
-	if (IsValid(SkeletalMeshComponent)) SkeletalMeshComponent->SetVisibility(true, true);
 }
 
 void UWeaponInstance::DeactivateWeapon()
@@ -248,29 +287,11 @@ void UWeaponInstance::DeactivateWeapon()
 
 	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, ShootTimerHandle);
 	UKismetSystemLibrary::K2_ClearAndInvalidateTimerHandle(this, ReloadTimerHandle);
-
-	if (IsValid(SkeletalMeshComponent)) SkeletalMeshComponent->SetVisibility(false, true);
 }
-
-//void UWeaponInstance::RotateGun(FVector AimPoint, FRotator CarRotation)
-//{
-//	/*if (!SkeletalMeshComponent) return;
-//
-//	FVector MuzzleLocation = SkeletalMeshComponent->GetSocketLocation("Muzzle");
-//	FVector Direction = (AimPoint - MuzzleLocation).GetSafeNormal();
-//	FRotator AimRotation = Direction.Rotation();
-//
-//	SkeletalMeshComponent->SetWorldRotation(AimRotation + CarRotation);*/
-//}
 
 AActor* UWeaponInstance::GetAimTarget() const
 {
 	return TraceShot().GetActor();
-}
-
-bool UWeaponInstance::IsWeaponValid() const
-{
-	return IsValid(Weapon) && bIsActive;
 }
 
 bool UWeaponInstance::EnsureValidAndHasAmmo()

@@ -48,7 +48,7 @@ UWeapon* UWeapon::CreateWeaponFromTable(TSubclassOf<UWeapon> Class, UDataTable* 
 	return Result;
 }
 
-FName UWeapon::GeTraceBarrel() const
+FName UWeapon::GetTraceBarrel() const
 {
 	switch (BarrelType)
 	{

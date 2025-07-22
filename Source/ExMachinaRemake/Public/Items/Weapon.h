@@ -163,7 +163,7 @@ private:
 
 public:
 	UFUNCTION(BlueprintCallable)
-		FName GeTraceBarrel() const;
+		FName GetTraceBarrel() const;
 
 	UFUNCTION(BlueprintCallable)
 		TArray<FName> GetParticleBarrels() const;

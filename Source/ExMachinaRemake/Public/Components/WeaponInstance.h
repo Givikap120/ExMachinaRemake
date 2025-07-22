@@ -3,8 +3,9 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/HitResult.h"
-#include <Sound/SoundBase.h>
-#include <Particles/ParticleSystem.h>
+#include "Sound/SoundBase.h"
+#include "Particles/ParticleSystem.h"
+#include "Items/Weapon.h"
 #include "WeaponInstance.generated.h"
 
 class USkeletalMeshComponent;
@@ -37,6 +38,9 @@ public:
 	void DeactivateWeapon();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
+	void AimTo(const FVector& TargetLocation);
+
+	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	AActor* GetAimTarget() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
@@ -49,6 +53,8 @@ public:
 	FOnAmmoChanged OnAmmoChanged;
 
 protected:
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
 	USkeletalMeshComponent* SkeletalMeshComponent;
 
@@ -66,6 +72,12 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void VisualsPlayOnce();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RotateGunMesh(float Yaw, float Pitch);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float RotationSpeed = 180.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "VFX")
 	UParticleSystem* HitEffect;
@@ -88,8 +100,13 @@ private:
 	// Can deactivate weapon completely without removing it's reference
 	bool bIsActive; 
 
-	// Used to control if player can start shooting
-	bool bCanStartShooting = true;
+	FVector AimTargetLocation;
+
+	float CurrentYaw = 0;
+	float CurrentPitch = 0;
+
+	float DesiredYaw = 0;
+	float DesiredPitch = 0;
 
 	FTimerHandle ReloadTimerHandle;
 	FTimerHandle ShootTimerHandle;
@@ -107,10 +124,7 @@ private:
 
 	void FinishReload();
 	
-	//void RotateGun(FVector AimPoint, FRotator CarRotation);
-
-	bool IsWeaponValid() const;
 	bool EnsureValidAndHasAmmo();
 
-	
+	inline bool IsWeaponValid() const { return IsValid(Weapon) && bIsActive; }
 };
