@@ -75,3 +75,4 @@ DerivedDataCache/*
 /Content/Assets
 .vsconfig
 *.rar
+/enc_temp_folder
