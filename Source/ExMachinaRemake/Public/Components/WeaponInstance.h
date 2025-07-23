@@ -52,6 +52,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Weapon")
 	FOnAmmoChanged OnAmmoChanged;
 
+	inline bool IsWeaponValid() const { return IsValid(Weapon) && bIsActive; }
+	inline UWeapon* GetWeapon() const { return Weapon; }
+
 protected:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -91,27 +94,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SFX")
 	USoundBase* HitSound;
 
-private:
-
-	float FireDelay;
-	bool bIsShooting;
-	bool bIsReloading;
-
-	// Can deactivate weapon completely without removing it's reference
-	bool bIsActive; 
-
-	FVector AimTargetLocation;
-
-	float CurrentYaw = 0;
-	float CurrentPitch = 0;
-
-	float DesiredYaw = 0;
-	float DesiredPitch = 0;
-
-	FTimerHandle ReloadTimerHandle;
-	FTimerHandle ShootTimerHandle;
-
-private:
+protected:
 	void RestoreAmmo();
 	void ConsumeAmmo();
 
@@ -123,8 +106,27 @@ private:
 	void StopShooting();
 
 	void FinishReload();
-	
+
 	bool EnsureValidAndHasAmmo();
 
-	inline bool IsWeaponValid() const { return IsValid(Weapon) && bIsActive; }
+	bool bIsShooting;
+	bool bIsReloading;
+
+	// Can deactivate weapon completely without removing it's reference
+	bool bIsActive;
+
+private:
+
+	float FireDelay;
+
+	FVector AimTargetLocation;
+
+	float CurrentYaw = 0;
+	float CurrentPitch = 0;
+
+	float DesiredYaw = 0;
+	float DesiredPitch = 0;
+
+	FTimerHandle ReloadTimerHandle;
+	FTimerHandle ShootTimerHandle;
 };
