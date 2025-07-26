@@ -110,7 +110,7 @@ struct FF_SaveGame_Weapon : public FF_SaveGame_Item
 	int32 CurrentCharge;
 };
 
-UCLASS(Abstract)
+UCLASS()
 class EXMACHINAREMAKE_API UWeapon : public UItem
 {
 	GENERATED_BODY()
