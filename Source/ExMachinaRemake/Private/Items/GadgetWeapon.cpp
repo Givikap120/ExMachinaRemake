@@ -33,7 +33,7 @@ void UGadgetWeapon::SetFromTable(UDataTable* DataTable, FName RowName)
 	Stats = *Row;
 }
 
-FF_SaveGame_GadgetWeapon UGadgetWeapon::SaveGadgetWeapon() const
+FF_SaveGame_GadgetWeapon UGadgetWeapon::SaveGadget() const
 {
 	FF_SaveGame_Item BaseSave = SaveItem();
 	FF_SaveGame_GadgetWeapon SaveData;
@@ -46,16 +46,16 @@ FF_SaveGame_GadgetWeapon UGadgetWeapon::SaveGadgetWeapon() const
 	return SaveData;
 }
 
-void UGadgetWeapon::LoadGadgetWeapon(const FF_SaveGame_GadgetWeapon& SaveGadgetWeapon)
+void UGadgetWeapon::LoadGadget(const FF_SaveGame_GadgetWeapon& SaveGadgetWeapon)
 {
 	LoadItem(SaveGadgetWeapon);
 
 	Stats = SaveGadgetWeapon.GadgetStats;
 }
 
-FString UGadgetWeapon::Serialize() const
+FString UGadgetWeapon::SerializeItem() const
 {
-	FF_SaveGame_GadgetWeapon Saved = SaveGadgetWeapon();
+	FF_SaveGame_GadgetWeapon Saved = SaveGadget();
 
 	FString OutputString;
 	if (FJsonObjectConverter::UStructToJsonObjectString(Saved, OutputString))
@@ -64,9 +64,9 @@ FString UGadgetWeapon::Serialize() const
 	return TEXT("");
 }
 
-void UGadgetWeapon::Deserialize(FString Json)
+void UGadgetWeapon::DeserializeItem(FString Json)
 {
 	FF_SaveGame_GadgetWeapon Loaded;
 	if (FJsonObjectConverter::JsonObjectStringToUStruct<FF_SaveGame_GadgetWeapon>(Json, &Loaded, 0, 0))
-		LoadGadgetWeapon(Loaded);
+		LoadGadget(Loaded);
 }

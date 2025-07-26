@@ -43,12 +43,12 @@ public:
 	// Save Game
 
 	UFUNCTION(BlueprintPure, Category = "SaveGame")
-	FF_SaveGame_GadgetCommon SaveGadgetCommon() const;
+	FF_SaveGame_GadgetCommon SaveGadget() const;
 
 	UFUNCTION(BlueprintCallable, Category = "SaveGame")
-	void LoadGadgetCommon(const FF_SaveGame_GadgetCommon& SaveGadgetCommon);
+	void LoadGadget(const FF_SaveGame_GadgetCommon& SaveGadgetCommon);
 
-	virtual FString Serialize() const override;
-	virtual void Deserialize(FString Json) override;
+	virtual FString SerializeItem() const override;
+	virtual void DeserializeItem(FString Json) override;
 
 };

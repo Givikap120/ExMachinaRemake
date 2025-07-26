@@ -200,6 +200,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SaveGame")
 	void LoadWeapon(const FF_SaveGame_Weapon& SaveWeapon);
 
-	virtual FString Serialize() const override;
-	virtual void Deserialize(FString Json) override;
+	virtual FString SerializeItem() const override;
+	virtual void DeserializeItem(FString Json) override;
 };

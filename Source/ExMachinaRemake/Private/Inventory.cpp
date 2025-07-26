@@ -66,6 +66,18 @@ bool UInventory::TryPlaceItem(UItem* Item, int32 X, int32 Y, FInventoryItem& Out
     return true;
 }
 
+bool UInventory::TryDropItemInside(UItem* Item)
+{
+    FInventoryItem Dummy;
+    return TryDropItemInside(Item, Dummy);
+}
+
+bool UInventory::TryPlaceItem(UItem* Item, int32 X, int32 Y)
+{
+    FInventoryItem Dummy;
+    return TryPlaceItem(Item, X, Y, Dummy);
+}
+
 UItem* UInventory::RemoveItemAt(int32 X, int32 Y)
 {
     for (int32 i = 0; i < Items.Num(); ++i)
@@ -139,7 +151,7 @@ FF_SaveGame_Inventory UInventory::SaveInventory() const
 
         FF_SaveGame_InventoryItem SaveItem;
 
-        SaveItem.EncodedItem = InvItem.Item->Serialize();
+        SaveItem.EncodedItem = InvItem.Item->SerializeItem();
         SaveItem.EncodedClass = InvItem.Item->GetClass()->GetPathName();
 
         SaveItem.X = InvItem.X;
@@ -177,7 +189,7 @@ void UInventory::LoadInventory(const FF_SaveGame_Inventory& SaveData)
         if (!InvItem.Item)
             continue;
 
-        InvItem.Item->Deserialize(SaveItem.EncodedItem);
+        InvItem.Item->DeserializeItem(SaveItem.EncodedItem);
         Items.Add(InvItem);
     }
 

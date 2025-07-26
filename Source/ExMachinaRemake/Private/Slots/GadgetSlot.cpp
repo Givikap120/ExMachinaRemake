@@ -16,21 +16,21 @@ void UGadgetSlot::GetSize(int32& SizeX, int32& SizeY) const
 	}
 }
 
-bool UGadgetSlot::TrySetGadget(UGadget* Gadget)
+bool UGadgetSlot::TrySetGadget(UGadget* NewGadget)
 {
-	if (!IsValid(Gadget) || Gadget->GetItemType() != GadgetType)
+	if (!IsValid(NewGadget) || NewGadget->GetItemType() != GadgetType)
 		return false;
 
-	GadgetPtr = Gadget;
+	Gadget = NewGadget;
 	OnGadgetChanged.Broadcast();
 	return true;
 }
 
 bool UGadgetSlot::TryRemoveGadget()
 {
-	if (!IsValid(GadgetPtr)) return false;
+	if (!IsValid(Gadget)) return false;
 
-	GadgetPtr = nullptr;
+	Gadget = nullptr;
 	OnGadgetChanged.Broadcast();
 	return true;
 }

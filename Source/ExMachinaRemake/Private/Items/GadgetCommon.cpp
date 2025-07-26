@@ -25,7 +25,7 @@ void UGadgetCommon::SetFromTable(UDataTable* DataTable, FName RowName)
 	MaxSpeedMultiplier = 1 + Row->MaxSpeedIncrease * 0.01;
 }
 
-FF_SaveGame_GadgetCommon UGadgetCommon::SaveGadgetCommon() const
+FF_SaveGame_GadgetCommon UGadgetCommon::SaveGadget() const
 {
     FF_SaveGame_Item BaseSave = SaveItem();
 
@@ -40,7 +40,7 @@ FF_SaveGame_GadgetCommon UGadgetCommon::SaveGadgetCommon() const
     return SaveData;
 }
 
-void UGadgetCommon::LoadGadgetCommon(const FF_SaveGame_GadgetCommon& SaveGadgetCommon)
+void UGadgetCommon::LoadGadget(const FF_SaveGame_GadgetCommon& SaveGadgetCommon)
 {
     LoadItem(SaveGadgetCommon);
 
@@ -48,9 +48,9 @@ void UGadgetCommon::LoadGadgetCommon(const FF_SaveGame_GadgetCommon& SaveGadgetC
     MaxSpeedMultiplier = SaveGadgetCommon.GadgetStats.MaxSpeedIncrease;
 }
 
-FString UGadgetCommon::Serialize() const
+FString UGadgetCommon::SerializeItem() const
 {
-    FF_SaveGame_GadgetCommon Saved = SaveGadgetCommon();
+    FF_SaveGame_GadgetCommon Saved = SaveGadget();
 
     FString OutputString;
     if (FJsonObjectConverter::UStructToJsonObjectString(Saved, OutputString))
@@ -59,9 +59,9 @@ FString UGadgetCommon::Serialize() const
     return TEXT("");
 }
 
-void UGadgetCommon::Deserialize(FString Json)
+void UGadgetCommon::DeserializeItem(FString Json)
 {
     FF_SaveGame_GadgetCommon Loaded;
     if (FJsonObjectConverter::JsonObjectStringToUStruct<FF_SaveGame_GadgetCommon>(Json, &Loaded, 0, 0))
-        LoadGadgetCommon(Loaded);
+        LoadGadget(Loaded);
 }

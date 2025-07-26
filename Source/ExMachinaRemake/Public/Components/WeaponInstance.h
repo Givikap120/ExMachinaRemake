@@ -44,7 +44,7 @@ public:
 	AActor* GetAimTarget() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void InitializeComponent(USkeletalMeshComponent* NewMeshComponent, UAudioComponent* NewAudioComponent, UWeapon* NewWeapon);
+	void Initialize(USkeletalMeshComponent* NewMeshComponent, UAudioComponent* NewAudioComponent, UWeapon* NewWeapon);
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
 	void InitializeFromWeapon(UWeapon* NewWeapon);

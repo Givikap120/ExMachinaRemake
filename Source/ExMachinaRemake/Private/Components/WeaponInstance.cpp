@@ -156,8 +156,6 @@ FHitResult UWeaponInstance::TraceShot() const
 
 	World->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params);
 
-	//DrawDebugLine(World, Start, End, FColor::Red, false, 1, 0, 1);
-
 	return HitResult;
 }
 
@@ -194,7 +192,7 @@ void UWeaponInstance::Shoot()
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, Hit.ImpactPoint);
 }
 
-void UWeaponInstance::InitializeComponent(USkeletalMeshComponent* NewMeshComponent, UAudioComponent* NewAudioComponent, UWeapon* NewWeapon)
+void UWeaponInstance::Initialize(USkeletalMeshComponent* NewMeshComponent, UAudioComponent* NewAudioComponent, UWeapon* NewWeapon)
 {
 	SkeletalMeshComponent = NewMeshComponent;
 	AudioComponent = NewAudioComponent;
@@ -225,7 +223,7 @@ void UWeaponInstance::InitializeFromWeapon(UWeapon* NewWeapon)
 	if (IsValid(SkeletalMeshComponent))
 	{
 		SkeletalMeshComponent->SetSkeletalMesh(Weapon->Model);
-		SkeletalMeshComponent->SetAnimInstanceClass(Weapon->Model->PostProcessAnimBlueprint);
+		SkeletalMeshComponent->SetAnimInstanceClass(Weapon->Model->GetPostProcessAnimBlueprint());
 	}
 
 	OnAmmoChanged.Broadcast(Weapon->CurrentCharge);

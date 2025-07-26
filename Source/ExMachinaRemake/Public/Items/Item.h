@@ -20,7 +20,7 @@ struct FItemStats : public FTableRowBase
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		FName DisplayName;
+		FString DisplayName;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		double Price;
@@ -38,7 +38,7 @@ struct FF_SaveGame_Item
 	FName Name;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FName DisplayName;
+	FString DisplayName;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	double Price;
@@ -59,7 +59,7 @@ public:
 		FName Name;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		FName DisplayName;
+		FString DisplayName;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		double Price;
@@ -91,9 +91,9 @@ public:
 	void LoadItem(const FF_SaveGame_Item& SaveItem);
 
 	UFUNCTION(BlueprintPure, Category = "SaveGame")
-	virtual FString Serialize() const;
+	virtual FString SerializeItem() const;
 
 	UFUNCTION(BlueprintCallable, Category = "SaveGame")
-	virtual void Deserialize(FString Json);
+	virtual void DeserializeItem(FString Json);
 };
 

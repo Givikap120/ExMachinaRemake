@@ -13,7 +13,7 @@ class EXMACHINAREMAKE_API UGadgetSlot : public UObject
 public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (ExposeOnSpawn = "true"))
-	TObjectPtr<UGadget> GadgetPtr;
+	TObjectPtr<UGadget> Gadget;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (ExposeOnSpawn = "true"))
 	EItemType GadgetType;
@@ -22,10 +22,10 @@ public:
 	void GetSize(int32& SizeX, int32& SizeY) const;
 
 	UFUNCTION(BlueprintPure)
-	bool HasGadget() const { return IsValid(GadgetPtr); }
+	bool HasGadget() const { return IsValid(Gadget); }
 
 	UFUNCTION(BlueprintCallable)
-	bool TrySetGadget(UGadget* Gadget);
+	bool TrySetGadget(UGadget* NewGadget);
 
 	UFUNCTION(BlueprintCallable)
 	bool TryRemoveGadget();

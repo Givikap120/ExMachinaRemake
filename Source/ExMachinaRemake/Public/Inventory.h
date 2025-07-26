@@ -80,6 +80,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool TryPlaceItem(UItem* Item, int32 X, int32 Y, FInventoryItem& OutPlacedItem);
 
+	bool TryDropItemInside(UItem* Item);
+	bool TryPlaceItem(UItem* Item, int32 X, int32 Y);
+
 	UFUNCTION(BlueprintCallable)
 	UItem* RemoveItemAt(int32 X, int32 Y);
 

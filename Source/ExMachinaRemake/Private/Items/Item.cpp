@@ -43,7 +43,7 @@ void UItem::LoadItem(const FF_SaveGame_Item& SaveItem)
 	Icon = SaveItem.Icon;
 }
 
-FString UItem::Serialize() const
+FString UItem::SerializeItem() const
 {
 	FF_SaveGame_Item Saved = SaveItem();
 
@@ -54,7 +54,7 @@ FString UItem::Serialize() const
 	return TEXT("");
 }
 
-void UItem::Deserialize(FString Json)
+void UItem::DeserializeItem(FString Json)
 {
 	FF_SaveGame_Item Loaded;
 	if (FJsonObjectConverter::JsonObjectStringToUStruct<FF_SaveGame_Item>(Json, &Loaded, 0, 0))

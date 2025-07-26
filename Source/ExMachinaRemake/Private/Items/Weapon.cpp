@@ -173,7 +173,7 @@ void UWeapon::LoadWeapon(const FF_SaveGame_Weapon& SaveWeapon)
 	CurrentCharge = SaveWeapon.CurrentCharge;
 }
 
-FString UWeapon::Serialize() const
+FString UWeapon::SerializeItem() const
 {
 	FF_SaveGame_Weapon Saved = SaveWeapon();
 
@@ -184,7 +184,7 @@ FString UWeapon::Serialize() const
 	return TEXT("");
 }
 
-void UWeapon::Deserialize(FString Json)
+void UWeapon::DeserializeItem(FString Json)
 {
 	FF_SaveGame_Weapon Loaded;
 	if (FJsonObjectConverter::JsonObjectStringToUStruct<FF_SaveGame_Weapon>(Json, &Loaded, 0, 0))
